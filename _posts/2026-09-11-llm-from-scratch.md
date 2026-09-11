@@ -1,8 +1,9 @@
 ---
 layout: post
 title: "[Hands-On] Building a Real LLM From Scratch for Systems People"
-date: 2026-09-11
 ---
+
+# [Hands-On] Building a Real LLM From Scratch for Systems People
 
 ## 1. Introduction
 
@@ -19,7 +20,7 @@ We have been told that LLMs are trained on enormous datasets and generate text b
 
 The above are the overall goals of this article; we achieve these goals by building an LLM from scratch.
 
-## 2. What will we do in this article?
+## ## 2. What will we do in this article?
 
 You will build and run a real GPT model that is trained on Shakespeare’s books and speaks like Shakespeare. Along the way, you will learn the necessary fundamental ML/AI concepts and tools.
 
@@ -123,11 +124,11 @@ I view neural network as a computer algorithm inspired by human brain.
 - Second, it learns from the output and adjust itself.
 - Third, it has a neuron-like data structure.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image.png)
 
 The following is the anatomy of a single artificial neuron. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-1.png)
 
 (*Anatomy of a single artificial neuron. Source: Тюжина Ирина / Getty Images*)
 
@@ -169,7 +170,7 @@ Now let's look at a cold, blustery day:
 
 A raw score of `43.5` and `-5` are not very useful predication. We just want a “yes” or “no”. The activation function is to get this “yes” or “no” output. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-2.png)
 
 **Wait—where do all the weights, bias, and activation come from?** In the example above, we manually picked the numbers; but in reality, we don’t know in the beginning. In the beginning of the neural network, these parameters are just random, much like newborn babies have no clue on how wind and temperatures would affect pickleball playing, and babies don’t know how much they like pickleball (i.e., the bias) either. Humans learn by playing. For example, Bob played 5 games and recorded his experience as follows.
 
@@ -213,7 +214,7 @@ The following diagram demonstrates one iteration of the process.
 3. Calculate the loss
 4. Use the loss to update the parameters in the model
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-3.png)
 
 Note that the process above is repeated many times. Each time, the parameters of the model are updated a little bit. The reason we can’t find the right parameters in one shot is that it’s like searching for the bottom of a valley on a foggy hillside. We can’t see anything beyond a few feet around us. So we have to search the hill gradually.
 
@@ -346,11 +347,11 @@ Now, we want to build a model that can speak like Shakespeare, what will be the 
 
 The following are something from Shakespeare. We will generate some examples from it for training.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-4.png)
 
 We can use a sliding window of a certain size to create the examples for training, as illustrated below.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-5.png)
 
 We will get the following training examples:
 
@@ -372,11 +373,11 @@ y = [
 
 We actually get 8 examples from the first block. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-6.png)
 
 The hope is that, when the model has seen enough examples like these, it will be able to predict the next token. The following diagram shows how the training data is used. The diagram is the same as the pickleball example, except that the weather and wind speed become a block of text from Shakespeare; the Yes/No becomes the next tokens..
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-7.png)
 
 ### Batching
 
@@ -392,7 +393,7 @@ x = [
 
 There are 3 rows here. To maximize the efficiency of training (higher parallelism if on GPUs), we want to train on multiple rows at the same time. We call the list of characters (e.g., `['a', 'c', 'c', 'o', 'u', 'n', 't', 'e']`) a **block**. Here the block size is 8, which indicates that there are 8 characters in the list. (In the complete example, the block size is 256). We call the list of blocks a batch. Here the batch size is 3, which indicates that there are 3 blocks. (In the complete example, the batch size is 64) The following diagram illustrates the setup.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-8.png)
 
 **HandsOn (`hands_on_003_training_examples.py`)**: the following code from our LLM is missing the part that fills `y`.
 
@@ -470,11 +471,11 @@ We need a lookup table to contain embeddings for tokens and positions. For the S
 
 The token embedding has 65 rows, because there are 65 characters in text. Each row contains the embedding for a token (i.e., a character). For example, the second row has the embedding for ‘!’ (token id is `2`). 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-9.png)
 
 The position embedding table has 256 rows. Each row contains the embedding for a particular position. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-10.png)
 
 In PyTorch, use `nn.Embedding` to define learnable lookup tables. It is learnable because PyTorch can automatically update the embeddings when optimizing.
 
@@ -543,11 +544,11 @@ What are the dimensions of `tok_emb`?
 
 Let’s take the small example we have used. Given the following input
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-11.png)
 
 Given the following input, the output will look like the following.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-12.png)
 
 Essentially, for each element in `idx`, we get an embedding and store it in an additional dimension. For example, `tok_emb[0, 3, 2]` stores a single number of the embedding for ‘o’. The dimensions for `tok_emb` is 64x256x384. 
 
@@ -560,13 +561,13 @@ pos_emb = self.position_embedding_table(torch.arange(T, device=device))
 
 `pos_emb` can be illustrated as follows.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-13.png)
 
 ### Merge token meanings and position info
 
 Token can’t be understood with position, so we want to merge them together. We can do this simply by adding the token embedding of a token with its corresponding position embedding.  For example, if token embedding is `[1, 2, 3]` and position embedding is `[4, 5, 6]`, then `[1+4, 2+5, 3+6] = [5, 7, 9]` is an embedding that contains both meaning and position info.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-14.png)
 
 The resulting embedding will then contain values from the token itself and its position.
 
@@ -631,7 +632,7 @@ As a reminder, these embeddings are random initially. The goal is to learn these
 
 We have combined the token meaning and position into one tensor, but the tokens are still isolated: the combined embedding only contains the info of one token. We must understand the context, which are the tokens at and before a particular token in a block, in order to really understand a token and predict the next token. The following diagram illustrate the goal; for example, the embedding of ‘o’ should contain the information of ‘a’, ‘c’, ‘c’ and ‘o’, which is the context. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-15.png)
 
 GPT understands the context by a mechanism called self-attention, which is the key part of modern LLMs. Let’s step back and look at a more intuitive example to understand it, then we will come back to the Shakespeare example, which uses the less intuitive character-level tokenization.
 
@@ -644,7 +645,7 @@ Let’s look at the ‘bat’ example again.
 
 The goal of LLMs is to predict the next token based on the tokens in the context. So, when we try to understand the token in a block (i.e., learn the token embedding and position embedding), we will need to collect information of tokens at and before the particular token. Let’s look at an example. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-16.png)
 
 Let’s say we have some scores for a feature for the different tokens. Now we want to collect  scores for understanding ‘bat’. One way is to sum the scores. The result is `0.3+0.5+2+1.3+3+0.3+2.4=9.8`. 
 
@@ -659,7 +660,7 @@ How can we determine the weight? The self-attention mechanism uses two matrixes 
 
 For example, let’s get the weights of ‘The’ and ‘player’; in other words, let’s check which of ‘The’ and ‘player’ is more related to ‘bat’. This is done by getting the product of the query of ‘bat’ and the keys of ‘the’ and ‘player’.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-17.png)
 
 - `Query(’bat’) @ Key(’the’) = [1, 1, 0] @ [0.1, 0.1, 0.1] = 1*0.1+1*0.1+0*0.1 = 0.2`
 - …
@@ -668,7 +669,7 @@ For example, let’s get the weights of ‘The’ and ‘player’; in other wor
 
 In the end, we may get the following weight.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-18.png)
 
 Q and K are for calculating the weight. We also need V (value):
 
@@ -676,11 +677,11 @@ Q and K are for calculating the weight. We also need V (value):
 
 As you can see, ‘player' relates to ‘bat’ more than ‘the’, because 1.1 > 0.2. So bat will pay more attention to ‘player’ than ‘the’, which is done by scaling the values. For example,
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-19.png)
 
 As we can see, the value of ‘player’ becomes more important than ‘the’; in other words, when trying to understand ‘bat’, we will pay more attention to ‘player’ than ‘the’. This makes sense because ‘player’ is about sports, which helps understanding ‘bat’. In the end, for any position `t`, we will have `block[t]` containing information at and before `t`, as illustrated below.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-20.png)
 
 Note that we have used the query of ‘bat’ to match the tokens before and including it, to understand ‘bat’. In fact, we have to do the same for all tokens, to understand all tokens. 
 
@@ -690,7 +691,7 @@ Note that we have used the query of ‘bat’ to match the tokens before and inc
 
 **Where do Q, K, and V come from?** Note that, Q, K, V are matrixes produced by their corresponding linear model. The following is an illustration of how the data flows. The input is a tensor with token meaning and position info. The input is fed into three models: one model learns how to build Query, one model learns how to build K, and one model learns how to build V. Then Q and V are used to determine a weight matrix, which is used to determine what features we extract from V.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-21.png)
 
 **HandsOn** (`gpt_DIY.py`): the definition of `self.query` is missing. Please define it.
 
@@ -716,15 +717,15 @@ self.query = nn.Linear(n_embd, head_size, bias=False)
 
 The input to the attention layer is the ‘sum of semantics and position’. If we feed it to `self.key`, it will become the following (note that the output size of `self.key` is `head_size`).
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-22.png)
 
 The query can be obtained similarly.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-23.png)
 
 Here is where we should explain what “multi-head attention” is. Multi-head attention is just multiple self-attention pipelines running independently, and then the results are simply concatenated together. Because we need to concatenate the results, then each head should only produce embedding of size `n_emb//n_head`. The following diagram demonstrates how two results are concatenated.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-24.png)
 
 **HandsOn** (`hands_on_006_multi_head_contatenation.py`): concatenate two tensors. The results of multi-head attentions are concatenated in a similar way.
 
@@ -764,15 +765,15 @@ out = torch.cat([head_1, head_2], dim=-1)
 
 Now, as we discussed in the ‘bat’ example, we need to get the dot product of query and key. This is done by `q @ k.transpose(-2,-1)` in PyTorch. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-25.png)
 
 The trick to quickly understand the manipulation is to look at only one block. For example, looking at the row of ‘t’ in `weight`, it contains how much attention ‘t’ should pay to other tokens in the same block. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-26.png)
 
 Recall that, for any token, we should only look at the token itself and the tokens before it. But the weight right now contains weight we don’t want. For example, the cell pointed by an arrow below tells how much ‘t’ should pay attention to ‘e’, which is after ‘t’. It is easy to see that the top-right half of the matrix contains such unwanted values. We don’t want to include them in the results. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-27.png)
 
 **HandsOn** (`hands_on_007_masking.py`): set the red part (upper triangle) to `-inf`.
 
@@ -820,7 +821,7 @@ wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf'))
 
 Let’s assume the weight for the ‘t’ row is as follows. We want to turn the numbers into probabilities with sum `1`, because we want ‘weighted average’, which keeps the Value at the same scale. In other words, we say “I have one unit of attention to spend, distribute it across the sources”. If the sum is a random number, different rows in the matrix may be scaled differently and not comparable. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-28.png)
 
 The code use Softmax to turn the numbers into probabilities. 
 
@@ -860,7 +861,7 @@ $$
 
 The result is as follows.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-29.png)
 
 Note that the ‘t-e’ cell becomes 0 because 
 
@@ -886,15 +887,15 @@ print("Sum of probabilities:", probs.sum().item())
 
 Now we come to the last step: getting the weighted Value. Similar to how we get `k` and `q`, we use `self.value` to get the matrix `v`. Recall that `v` is the actual info each token want to expose.
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-30.png)
 
 The following diagram demonstrates the process to get weighted value. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-31.png)
 
 To more intuitively understand it, let’s again look at one single block (i.e., a flat horizontal layer in the diagram above).
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-32.png)
 
 For example, the highlighted cell in the weighted value is the dot product of the weight of the ‘t’ row and the first column of the value. In the end, the highlighted cell in weighted value has aggregated info from all tokens at and before its position. 
 
@@ -902,7 +903,7 @@ For example, the highlighted cell in the weighted value is the dot product of th
 
 So far, we have got the weighted value. But that’s not what we want in the end. We want to predict the next token. In other words, we want to know the probabilities of all tokens in the vocabulary for being the next token. For example, given the context ‘accoun’, the probability of ‘t’ being the next may be `0.4` and the probability of ‘&’ may be `0.003`. 
 
-!image.png
+![image.png](/assets/images/llm-from-scratch/image-33.png)
 
 How can we turn the weighted value into probabilities of next tokens? Well, just run the data through a model. The training examples will teach the model to produce the probabilities.
 
@@ -928,7 +929,7 @@ $$
 \text{Loss} = -\log(p_{\text{correct}})
 $$
 
-!Code_Generated_Image.png
+![Code_Generated_Image.png](/assets/images/llm-from-scratch/code-generated-image.png)
 
 Looking at the plot, you can see that, the lower the probability of the correct token is, the more loss it is.
 
