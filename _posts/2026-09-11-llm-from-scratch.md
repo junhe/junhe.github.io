@@ -1,6 +1,7 @@
 ---
 layout: post
 title: "[Hands-On] Building a Real LLM From Scratch for Systems People"
+math: true
 ---
 
 # [Hands-On] Building a Real LLM From Scratch for Systems People
