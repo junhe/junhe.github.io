@@ -4,6 +4,14 @@ title: "[Hands-On] Building a Real LLM From Scratch for Systems People"
 math: true
 ---
 
+![image.png](/assets/images/llm-from-scratch/image-5.png)
+
+## Table of contents
+{:.no_toc}
+
+* TOC
+{:toc}
+
 ## 1. Introduction
 
 By now, we’re probably all familiar with large language models (LLMs) such as ChatGPT, Gemini, and Claude. Since 2022, LLMs have begun to revolutionize the world and have had a significant impact on our lives.
@@ -43,7 +51,7 @@ The reason that this LLM can do so is because it learned from the text of Shakes
 
 The following is the text that written by the LLM. As you can see, the output has the style of Shakespeare.
 
-```python
+```
 (.venv) (base) junhe@Juns-MacBook-Pro-2 llm-0-to-1 % python gpt_complete.py 
 
 step 0: train loss 4.2221, val loss 4.2306
@@ -562,7 +570,7 @@ pos_emb = self.position_embedding_table(torch.arange(T, device=device))
 
 `pos_emb` can be illustrated as follows.
 
-![image.png](/assets/images/llm-from-scratch/image-13.png)
+![image.png](/assets/images/llm-from-scratch/image-13.png){: width="400px"}
 
 ### Merge token meanings and position info
 
@@ -633,7 +641,7 @@ As a reminder, these embeddings are random initially. The goal is to learn these
 
 We have combined the token meaning and position into one tensor, but the tokens are still isolated: the combined embedding only contains the info of one token. We must understand the context, which are the tokens at and before a particular token in a block, in order to really understand a token and predict the next token. The following diagram illustrate the goal; for example, the embedding of ‘o’ should contain the information of ‘a’, ‘c’, ‘c’ and ‘o’, which is the context. 
 
-![image.png](/assets/images/llm-from-scratch/image-15.png)
+![image.png](/assets/images/llm-from-scratch/image-15.png){: width="400px"}
 
 GPT understands the context by a mechanism called self-attention, which is the key part of modern LLMs. Let’s step back and look at a more intuitive example to understand it, then we will come back to the Shakespeare example, which uses the less intuitive character-level tokenization.
 
@@ -661,7 +669,7 @@ How can we determine the weight? The self-attention mechanism uses two matrixes 
 
 For example, let’s get the weights of ‘The’ and ‘player’; in other words, let’s check which of ‘The’ and ‘player’ is more related to ‘bat’. This is done by getting the product of the query of ‘bat’ and the keys of ‘the’ and ‘player’.
 
-![image.png](/assets/images/llm-from-scratch/image-17.png)
+![image.png](/assets/images/llm-from-scratch/image-17.png){: width="500px"}
 
 - `Query(’bat’) @ Key(’the’) = [1, 1, 0] @ [0.1, 0.1, 0.1] = 1*0.1+1*0.1+0*0.1 = 0.2`
 - …
@@ -682,7 +690,7 @@ As you can see, ‘player' relates to ‘bat’ more than ‘the’, because 1.1
 
 As we can see, the value of ‘player’ becomes more important than ‘the’; in other words, when trying to understand ‘bat’, we will pay more attention to ‘player’ than ‘the’. This makes sense because ‘player’ is about sports, which helps understanding ‘bat’. In the end, for any position `t`, we will have `block[t]` containing information at and before `t`, as illustrated below.
 
-![image.png](/assets/images/llm-from-scratch/image-20.png)
+![image.png](/assets/images/llm-from-scratch/image-20.png){: width="500px"}
 
 Note that we have used the query of ‘bat’ to match the tokens before and including it, to understand ‘bat’. In fact, we have to do the same for all tokens, to understand all tokens. 
 
@@ -726,7 +734,7 @@ The query can be obtained similarly.
 
 Here is where we should explain what “multi-head attention” is. Multi-head attention is just multiple self-attention pipelines running independently, and then the results are simply concatenated together. Because we need to concatenate the results, then each head should only produce embedding of size `n_emb//n_head`. The following diagram demonstrates how two results are concatenated.
 
-![image.png](/assets/images/llm-from-scratch/image-24.png)
+![image.png](/assets/images/llm-from-scratch/image-24.png){: width="500px"}
 
 **HandsOn** (`hands_on_006_multi_head_contatenation.py`): concatenate two tensors. The results of multi-head attentions are concatenated in a similar way.
 
@@ -774,7 +782,7 @@ The trick to quickly understand the manipulation is to look at only one block. F
 
 Recall that, for any token, we should only look at the token itself and the tokens before it. But the weight right now contains weight we don’t want. For example, the cell pointed by an arrow below tells how much ‘t’ should pay attention to ‘e’, which is after ‘t’. It is easy to see that the top-right half of the matrix contains such unwanted values. We don’t want to include them in the results. 
 
-![image.png](/assets/images/llm-from-scratch/image-27.png)
+![image.png](/assets/images/llm-from-scratch/image-27.png){: width="500px"}
 
 **HandsOn** (`hands_on_007_masking.py`): set the red part (upper triangle) to `-inf`.
 
@@ -822,7 +830,7 @@ wei = wei.masked_fill(self.tril[:T, :T] == 0, float('-inf'))
 
 Let’s assume the weight for the ‘t’ row is as follows. We want to turn the numbers into probabilities with sum `1`, because we want ‘weighted average’, which keeps the Value at the same scale. In other words, we say “I have one unit of attention to spend, distribute it across the sources”. If the sum is a random number, different rows in the matrix may be scaled differently and not comparable. 
 
-![image.png](/assets/images/llm-from-scratch/image-28.png)
+![image.png](/assets/images/llm-from-scratch/image-28.png){: width="500px"}
 
 The code use Softmax to turn the numbers into probabilities. 
 
@@ -862,7 +870,7 @@ $$
 
 The result is as follows.
 
-![image.png](/assets/images/llm-from-scratch/image-29.png)
+![image.png](/assets/images/llm-from-scratch/image-29.png){: width="500px"}
 
 Note that the ‘t-e’ cell becomes 0 because 
 
@@ -930,7 +938,7 @@ $$
 \text{Loss} = -\log(p_{\text{correct}})
 $$
 
-![Code_Generated_Image.png](/assets/images/llm-from-scratch/code-generated-image.png)
+![Code_Generated_Image.png](/assets/images/llm-from-scratch/code-generated-image.png){: width="500px"}
 
 Looking at the plot, you can see that, the lower the probability of the correct token is, the more loss it is.
 
