@@ -2,5 +2,5 @@
 layout: home
 ---
 
-Hand-written contents in the AI era in computer science and miscellaneous topics. The contents on this site does not represent the views of my employer.
+Hand-written content on computer science and miscellaneous topics in the AI era. The views expressed on this site do not represent those of my employer.
 
