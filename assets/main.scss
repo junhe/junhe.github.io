@@ -3,3 +3,8 @@
 ---
 
 @use "minima" as *;
+
+.post-content img {
+  display: block;
+  margin: 0 auto;
+}

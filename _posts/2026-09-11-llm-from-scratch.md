@@ -4,8 +4,6 @@ title: "[Hands-On] Building a Real LLM From Scratch for Systems People"
 math: true
 ---
 
-# [Hands-On] Building a Real LLM From Scratch for Systems People
-
 ## 1. Introduction
 
 By now, we’re probably all familiar with large language models (LLMs) such as ChatGPT, Gemini, and Claude. Since 2022, LLMs have begun to revolutionize the world and have had a significant impact on our lives.
@@ -21,7 +19,7 @@ We have been told that LLMs are trained on enormous datasets and generate text b
 
 The above are the overall goals of this article; we achieve these goals by building an LLM from scratch.
 
-## ## 2. What will we do in this article?
+## 2. What will we do in this article?
 
 You will build and run a real GPT model that is trained on Shakespeare’s books and speaks like Shakespeare. Along the way, you will learn the necessary fundamental ML/AI concepts and tools.
 
@@ -129,7 +127,7 @@ I view neural network as a computer algorithm inspired by human brain.
 
 The following is the anatomy of a single artificial neuron. 
 
-![image.png](/assets/images/llm-from-scratch/image-1.png)
+![image.png](/assets/images/llm-from-scratch/image-1.png){: width="80%"}
 
 (*Anatomy of a single artificial neuron. Source: Тюжина Ирина / Getty Images*)
 
@@ -374,7 +372,7 @@ y = [
 
 We actually get 8 examples from the first block. 
 
-![image.png](/assets/images/llm-from-scratch/image-6.png)
+![image.png](/assets/images/llm-from-scratch/image-6.png){: width="200px"}
 
 The hope is that, when the model has seen enough examples like these, it will be able to predict the next token. The following diagram shows how the training data is used. The diagram is the same as the pickleball example, except that the weather and wind speed become a block of text from Shakespeare; the Yes/No becomes the next tokens..
 
@@ -472,11 +470,11 @@ We need a lookup table to contain embeddings for tokens and positions. For the S
 
 The token embedding has 65 rows, because there are 65 characters in text. Each row contains the embedding for a token (i.e., a character). For example, the second row has the embedding for ‘!’ (token id is `2`). 
 
-![image.png](/assets/images/llm-from-scratch/image-9.png)
+![image.png](/assets/images/llm-from-scratch/image-9.png){: width="300px"}
 
 The position embedding table has 256 rows. Each row contains the embedding for a particular position. 
 
-![image.png](/assets/images/llm-from-scratch/image-10.png)
+![image.png](/assets/images/llm-from-scratch/image-10.png){: width="300px"}
 
 In PyTorch, use `nn.Embedding` to define learnable lookup tables. It is learnable because PyTorch can automatically update the embeddings when optimizing.
 
@@ -545,11 +543,11 @@ What are the dimensions of `tok_emb`?
 
 Let’s take the small example we have used. Given the following input
 
-![image.png](/assets/images/llm-from-scratch/image-11.png)
+![image.png](/assets/images/llm-from-scratch/image-11.png){: width="300px"}
 
 Given the following input, the output will look like the following.
 
-![image.png](/assets/images/llm-from-scratch/image-12.png)
+![image.png](/assets/images/llm-from-scratch/image-12.png){: width="300px"}
 
 Essentially, for each element in `idx`, we get an embedding and store it in an additional dimension. For example, `tok_emb[0, 3, 2]` stores a single number of the embedding for ‘o’. The dimensions for `tok_emb` is 64x256x384. 
 
