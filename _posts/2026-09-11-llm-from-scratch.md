@@ -47,9 +47,9 @@ The code for this article is available at [https://github.com/junhe/llm-from-scr
 
 To get you excited, let’s see what LLM you will get at the end of this article. You will get an LLM that will write as if it is Shakespeare.
 
-The reason that this LLM can do so is because it learned from the text of Shakespeare. It is similar to ChatGPT, which is trained on almost all the text in the world.
+This LLM can do so because it learned from the text of Shakespeare. It is similar to ChatGPT, which is trained on almost all the text in the world.
 
-The following is the text that written by the LLM. As you can see, the output has the style of Shakespeare.
+The following is the text written by the LLM. As you can see, the output has the style of Shakespeare.
 
 ```
 (.venv) (base) junhe@Juns-MacBook-Pro-2 llm-0-to-1 % python gpt_complete.py 
@@ -113,7 +113,7 @@ Embeddings quantify the features so computers can understand them.
 
 ### How to determine the similarity between two embeddings?
 
-One magic with embeddings is that, by turning the animal features into numbers, computers can now understand/determine how similar two animals are. One way is to use the dot product, which we will use later. Let’s use dot product to answer the question: is dog more similar to cat or lion. 
+One magical property of embeddings is that, by turning the animal features into numbers, computers can now determine how similar two animals are. One way is to use the dot product, which we will use later. Let’s use the dot product to answer the question: is a dog more similar to a cat or a lion?
 
 ```
 Dog           Cat
@@ -123,14 +123,14 @@ Dog           Lion
 [0.7, 0.2] x [-0.9, 0.7] = 0.7*(-0.9) + 0.2*0.7 = -0.49
 ```
 
-`0.48` is larger than `-0.49`, so dog is more similar to cat than lion.
+`0.48` is larger than `-0.49`, so a dog is more similar to a cat than to a lion.
 
 ### What is a neural network?
 
-I view neural network as a computer algorithm inspired by human brain. 
+I view a neural network as a computer algorithm inspired by the human brain. 
 
-- First, it takes some input, and produce some output.
-- Second, it learns from the output and adjust itself.
+- First, it takes some input, and produces some output.
+- Second, it learns from the output and adjusts itself.
 - Third, it has a neuron-like data structure.
 
 ![image.png](/assets/images/llm-from-scratch/image.png)
@@ -173,11 +173,11 @@ Now let's look at a cold, blustery day:
 
 ***What are logits?*** 
 
-*In this example, the scores 43.5 and -5 are logits, which are raw scores. These raw scores are what computers need, but they are confusing for humans. 1. they have no limits, 2. they are not probabilities. We usually need to convert the logits to a more unified space so computers and humans can better interpret them.* 
+*In this example, the scores 43.5 and -5 are logits, which are raw scores. These raw scores are what computers need, but they are confusing for humans: (1) they have no limits, and (2) they are not probabilities. We usually need to convert the logits to a more unified space so computers and humans can better interpret them.* 
 
 **The Activation Function (The Final Call)**
 
-A raw score of `43.5` and `-5` are not very useful predication. We just want a “yes” or “no”. The activation function is to get this “yes” or “no” output. 
+Raw scores of `43.5` and `-5` are not very useful predictions. We just want a “yes” or “no”. The activation function is what produces this “yes” or “no” output. 
 
 ![image.png](/assets/images/llm-from-scratch/image-2.png)
 
@@ -201,7 +201,7 @@ The following code is a key part of the training process.
 
 ```python
 for epoch in range(epochs):
-    # Initialize the optimizer, which is an algorithm will improve the accuracy
+    # Initialize the optimizer, which is an algorithm that will improve the accuracy
     # of the model.
     optimizer.zero_grad()
     
@@ -251,7 +251,7 @@ We have covered the basics of neural networks. Let’s start building the LLM.
 
 ### What do LLMs do?
 
-LLMs generate text by predicating next token based on the current text. For example, if the text is “the cat sat on the ___”, the LLM may predict the probability of the possible words like the following:
+LLMs generate text by predicting the next token based on the current text. For example, if the text is “the cat sat on the ___”, the LLM may predict the probability of the possible words like the following:
 
 - **"mat"** - 72%
 - **"couch"** - 10%
@@ -262,7 +262,7 @@ LLMs generate text by predicating next token based on the current text. For exam
 
 If “mat” is selected, then the text for the next round of prediction will become “the cat sat on the mat ___”. This process is repeated to produce long text.
 
-Fundamentally, LLMs predicates the next token based on the current context of tokens.
+Fundamentally, LLMs predict the next token based on the current context of tokens.
 
 ### What are tokens?
 
@@ -324,7 +324,7 @@ decode = lambda l: ''.join([itos[i] for i in l])
 
 ### What’s the input and output for the training? What is the training data?
 
-Remember, in the earlier pickleball example, we have the following training data. We feed the model `X_raw`, and get some output, then we compare the output with the target output. We see how wrong the model is and then adjust the model.
+Recall that, in the earlier pickleball example, we had the following training data. We feed the model `X_raw` and get some output, then we compare the output with the target output. We see how wrong the model is and then adjust the model.
 
 ```python
 # Features: [Temperature (°F), Wind Speed (mph)]
@@ -352,9 +352,9 @@ y_train = torch.tensor([
 ], dtype=torch.float32)
 ```
 
-Now, we want to build a model that can speak like Shakespeare, what will be the examples? Given the text from Shakespeare, how can we structure the examples to train the model? I think we all have heard that, LLM predicts the next token given the tokens in the context. Let’s take a look at a small example.
+Now that we want to build a model that can speak like Shakespeare, what will the examples look like? Given the text from Shakespeare, how can we structure the examples to train the model? I think we have all heard that an LLM predicts the next token given the tokens in the context. Let’s take a look at a small example.
 
-The following are something from Shakespeare. We will generate some examples from it for training.
+The following is a snippet from Shakespeare. We will generate some examples from it for training.
 
 ![image.png](/assets/images/llm-from-scratch/image-4.png)
 
@@ -378,13 +378,13 @@ y = [
 ]
 ```
 
-(Note that, in the article we use the actual characters for better illustration. But what actually go into the model are token IDs, which are integers.)
+(Note that, in the article we use the actual characters for better illustration. But what actually goes into the model are token IDs, which are integers.)
 
 We actually get 8 examples from the first block. 
 
 ![image.png](/assets/images/llm-from-scratch/image-6.png){: width="200px"}
 
-The hope is that, when the model has seen enough examples like these, it will be able to predict the next token. The following diagram shows how the training data is used. The diagram is the same as the pickleball example, except that the weather and wind speed become a block of text from Shakespeare; the Yes/No becomes the next tokens..
+The hope is that, when the model has seen enough examples like these, it will be able to predict the next token. The following diagram shows how the training data is used. The diagram is the same as the pickleball example, except that the temperature and wind speed become a block of text from Shakespeare; the Yes/No becomes the next tokens.
 
 ![image.png](/assets/images/llm-from-scratch/image-7.png)
 
@@ -400,7 +400,7 @@ x = [
 ]
 ```
 
-There are 3 rows here. To maximize the efficiency of training (higher parallelism if on GPUs), we want to train on multiple rows at the same time. We call the list of characters (e.g., `['a', 'c', 'c', 'o', 'u', 'n', 't', 'e']`) a **block**. Here the block size is 8, which indicates that there are 8 characters in the list. (In the complete example, the block size is 256). We call the list of blocks a batch. Here the batch size is 3, which indicates that there are 3 blocks. (In the complete example, the batch size is 64) The following diagram illustrates the setup.
+There are 3 rows here. To maximize the efficiency of training (higher parallelism if on GPUs), we want to train on multiple rows at the same time. We call the list of characters (e.g., `['a', 'c', 'c', 'o', 'u', 'n', 't', 'e']`) a **block**. Here the block size is 8, which indicates that there are 8 characters in the list. (In the complete example, the block size is 256.) We call the list of blocks a batch. Here the batch size is 3, which indicates that there are 3 blocks. (In the complete example, the batch size is 64.) The following diagram illustrates the setup.
 
 ![image.png](/assets/images/llm-from-scratch/image-8.png)
 
@@ -463,12 +463,12 @@ During training, `idx` is one input batch of token IDs. It is called `idx` becau
 
 (We will use word-level tokenization and an example not from Shakespeare to make it more intuitive to understand.)
 
-Let’s consider the word “bat”, it could mean a baseball gear or a flying animal. The exact meaning can only be determined by the context. The following are two scenarios:
+Let’s consider the word “bat”: it could mean a piece of baseball gear or a flying animal. The exact meaning can only be determined by the context. The following are two scenarios:
 
 1. Scenario A (Sports): “The top teen player swung the bat.”
 2. Scenario B (Nature): “Out of the cave flew a bat.”
 
-Intuitively, to understand a word, the meaning of the word matters and its position in the text also matters. For example, the two sentences above could appear in the same article; the meaning of ‘bat’ depends its position. So, we need the following parameters to cover semantics and positions. 
+Intuitively, to understand a word, the meaning of the word matters and its position in the text also matters. For example, the two sentences above could appear in the same article; the meaning of ‘bat’ depends on its position. So, we need the following parameters to cover semantics and positions. 
 
 **Token Embedding**. For simplicity, let’s assume that the embedding is a vector of size three: `[sports score, nature score, emotion score]`. 
 
@@ -478,7 +478,7 @@ Intuitively, to understand a word, the meaning of the word matters and its posit
 
 We need a lookup table to contain embeddings for tokens and positions. For the Shakespeare example, the tables can be visualized as follows.
 
-The token embedding has 65 rows, because there are 65 characters in text. Each row contains the embedding for a token (i.e., a character). For example, the second row has the embedding for ‘!’ (token id is `2`). 
+The token embedding has 65 rows, because there are 65 characters in the text. Each row contains the embedding for a token (i.e., a character). For example, the second row has the embedding for ‘!’ (token id is `2`). 
 
 ![image.png](/assets/images/llm-from-scratch/image-9.png){: width="300px"}
 
@@ -536,14 +536,14 @@ self.position_embedding_table = nn.Embedding(block_size, n_embd)
 
 ### Convert token IDs and positions to embeddings
 
-We need to turn the token IDs and their positions into embeddings, which will be optimized during training. Recall that earlier that we have defined two embedding tables:
+We need to turn the token IDs and their positions into embeddings, which will be optimized during training. Recall that earlier we defined two embedding tables:
 
 ```python
 self.token_embedding_table = nn.Embedding(vocab_size, n_embd)
 self.position_embedding_table = nn.Embedding(block_size, n_embd)
 ```
 
-Now that we just need to lookup the tables. The following code does the lookup for the token meanings.
+Now we just need to look up the tables. The following code does the lookup for the token meanings.
 
 ```python
 tok_emb = self.token_embedding_table(idx)
@@ -559,12 +559,12 @@ Given the following input, the output will look like the following.
 
 ![image.png](/assets/images/llm-from-scratch/image-12.png){: width="300px"}
 
-Essentially, for each element in `idx`, we get an embedding and store it in an additional dimension. For example, `tok_emb[0, 3, 2]` stores a single number of the embedding for ‘o’. The dimensions for `tok_emb` is 64x256x384. 
+Essentially, for each element in `idx`, we get an embedding and store it in an additional dimension. For example, `tok_emb[0, 3, 2]` stores a single number of the embedding for ‘o’. The dimensions of `tok_emb` are 64x256x384. 
 
-Now, let us get the position embeddings. In each block, we has position 0, 1, …, block_size-1. We just need to lookup the position embedding table with this sequence, as follows.
+Now, let us get the position embeddings. In each block, we have positions 0, 1, …, block_size-1. We just need to look up the position embedding table with this sequence, as follows.
 
 ```python
-# torch.arrange(T) produces [0, 1, 2, ..., T-1]
+# torch.arange(T) produces [0, 1, 2, ..., T-1]
 pos_emb = self.position_embedding_table(torch.arange(T, device=device))
 ```
 
@@ -574,7 +574,7 @@ pos_emb = self.position_embedding_table(torch.arange(T, device=device))
 
 ### Merge token meanings and position info
 
-Token can’t be understood with position, so we want to merge them together. We can do this simply by adding the token embedding of a token with its corresponding position embedding.  For example, if token embedding is `[1, 2, 3]` and position embedding is `[4, 5, 6]`, then `[1+4, 2+5, 3+6] = [5, 7, 9]` is an embedding that contains both meaning and position info.
+A token can’t be understood without position, so we want to merge them together. We can do this simply by adding the token embedding of a token with its corresponding position embedding.  For example, if token embedding is `[1, 2, 3]` and position embedding is `[4, 5, 6]`, then `[1+4, 2+5, 3+6] = [5, 7, 9]` is an embedding that contains both meaning and position info.
 
 ![image.png](/assets/images/llm-from-scratch/image-14.png)
 
@@ -639,7 +639,7 @@ As a reminder, these embeddings are random initially. The goal is to learn these
 
 ### Understanding the context
 
-We have combined the token meaning and position into one tensor, but the tokens are still isolated: the combined embedding only contains the info of one token. We must understand the context, which are the tokens at and before a particular token in a block, in order to really understand a token and predict the next token. The following diagram illustrate the goal; for example, the embedding of ‘o’ should contain the information of ‘a’, ‘c’, ‘c’ and ‘o’, which is the context. 
+We have combined the token meaning and position into one tensor, but the tokens are still isolated: the combined embedding only contains the info of one token. We must understand the context, which is the tokens at and before a particular token in a block, in order to really understand a token and predict the next token. The following diagram illustrates the goal; for example, the embedding of ‘o’ should contain the information of ‘a’, ‘c’, ‘c’ and ‘o’, which is the context. 
 
 ![image.png](/assets/images/llm-from-scratch/image-15.png){: width="400px"}
 
@@ -656,13 +656,13 @@ The goal of LLMs is to predict the next token based on the tokens in the context
 
 ![image.png](/assets/images/llm-from-scratch/image-16.png)
 
-Let’s say we have some scores for a feature for the different tokens. Now we want to collect  scores for understanding ‘bat’. One way is to sum the scores. The result is `0.3+0.5+2+1.3+3+0.3+2.4=9.8`. 
+Let’s say we have some scores for a feature for the different tokens. Now we want to collect scores for understanding ‘bat’. One way is to sum the scores. The result is `0.3+0.5+2+1.3+3+0.3+2.4=9.8`. 
 
-This approach can collect info, but it also makes the collected score depends on the number of tokens before it. We don’t want this because it will generally make the token that appears later in the context have a larger score. We can solve the problem by averaging the score. It then becomes `9.8/7=1.4`. This is better. 
+This approach can collect info, but it also makes the collected score depend on the number of tokens before it. We don’t want this because it will generally make the token that appears later in the context have a larger score. We can solve the problem by averaging the score. It then becomes `9.8/7=1.4`. This is better. 
 
-But some tokens are clearly more important to ‘bat’ than others; ‘bat’ should pay more attention to them. So, we should add a **weight** for each token to indicate how much attention it is assigned. The new score of `bat` becomes `w_1*0.3+w_2*0.5+w_3*2+w_4*1.3+w_5*3+w_6*0.3+w_7*2.4` . 
+But some tokens are clearly more important to ‘bat’ than others; ‘bat’ should pay more attention to them. So, we should add a **weight** for each token to indicate how much attention it should receive. The new score of `bat` becomes `w_1*0.3+w_2*0.5+w_3*2+w_4*1.3+w_5*3+w_6*0.3+w_7*2.4` . 
 
-How can we determine the weight? The self-attention mechanism uses two matrixes to do it. They are ‘query’ and ‘key’. 
+How can we determine the weight? The self-attention mechanism uses two matrices to do it. They are ‘query’ and ‘key’. 
 
 - Q (query): what information should I look for at my position? For example, a query of “bat” at a certain position could have a query “I look for information about sports, nature”. Then the over-simplified Q may be `[1, 1, 0]` .
 - K (key): what **quick** information does the token provide at its position? For example, the token ‘player’ could be learned and become `[0.9, 0.2, 0.1]`, which indicates that “I am related to sports, not so much about nature or emotion”. The token ‘the’ could have key `[0.1, 0.1, 0.1]`, indicating that it is not so much about sports, nature, or emotion.
@@ -688,17 +688,17 @@ As you can see, ‘player' relates to ‘bat’ more than ‘the’, because 1.1
 
 ![image.png](/assets/images/llm-from-scratch/image-19.png)
 
-As we can see, the value of ‘player’ becomes more important than ‘the’; in other words, when trying to understand ‘bat’, we will pay more attention to ‘player’ than ‘the’. This makes sense because ‘player’ is about sports, which helps understanding ‘bat’. In the end, for any position `t`, we will have `block[t]` containing information at and before `t`, as illustrated below.
+As we can see, the value of ‘player’ becomes more important than ‘the’; in other words, when trying to understand ‘bat’, we will pay more attention to ‘player’ than ‘the’. This makes sense because ‘player’ is about sports, which helps in understanding ‘bat’. In the end, for any position `t`, we will have `block[t]` containing information at and before `t`, as illustrated below.
 
 ![image.png](/assets/images/llm-from-scratch/image-20.png){: width="500px"}
 
 Note that we have used the query of ‘bat’ to match the tokens before and including it, to understand ‘bat’. In fact, we have to do the same for all tokens, to understand all tokens. 
 
-**Why do we need Query and Key?** Query controls what we look for. For example, even if ‘bat’ has meanings about sports and nature in itself, it may not want to look for nature related tokens, because we have found that this particular ‘bat’ is the baseball bat. Key can control what is exposed to the query. There could be cases where the token has meanings about nature but not want to let others know about it because the particular token is not about nature.
+**Why do we need Query and Key?** Query controls what we look for. For example, even if ‘bat’ has meanings about sports and nature in itself, it may not want to look for nature-related tokens, because we have found that this particular ‘bat’ is the baseball bat. Key can control what is exposed to the query. There could be cases where the token has meanings about nature but does not want to let others know about it because the particular token is not about nature.
 
-**Why do we need both K and V?** V contains the actually meaning, and K controls what inside of V and how much of them are exposed, depending on the query. An analogy would be, Q is like a customer at a bookstore, looking for a book; K is like the author. Q and K will talk, then K will bring the book (V) that the customer need. Or even more accurately, K will actually read the book to Q, skipping some information useless to Q, according to Q’s needs.
+**Why do we need both K and V?** V contains the actual meaning, and K controls what parts of V, and how much of them, are exposed, depending on the query. An analogy would be: Q is like a customer at a bookstore, looking for a book; K is like the author. Q and K will talk, then K will bring the book (V) that the customer needs. Or even more accurately, K will actually read the book to Q, skipping information that isn’t relevant to Q, according to Q’s needs.
 
-**Where do Q, K, and V come from?** Note that, Q, K, V are matrixes produced by their corresponding linear model. The following is an illustration of how the data flows. The input is a tensor with token meaning and position info. The input is fed into three models: one model learns how to build Query, one model learns how to build K, and one model learns how to build V. Then Q and V are used to determine a weight matrix, which is used to determine what features we extract from V.
+**Where do Q, K, and V come from?** Note that Q, K, V are matrices produced by their corresponding linear layers. The following is an illustration of how the data flows. The input is a tensor with token meaning and position info. The input is fed into three models: one model learns how to build Query, one model learns how to build K, and one model learns how to build V. Then Q and K are used to determine a weight matrix, which is used to determine what features we extract from V.
 
 ![image.png](/assets/images/llm-from-scratch/image-21.png)
 
@@ -732,7 +732,7 @@ The query can be obtained similarly.
 
 ![image.png](/assets/images/llm-from-scratch/image-23.png)
 
-Here is where we should explain what “multi-head attention” is. Multi-head attention is just multiple self-attention pipelines running independently, and then the results are simply concatenated together. Because we need to concatenate the results, then each head should only produce embedding of size `n_emb//n_head`. The following diagram demonstrates how two results are concatenated.
+Here is where we should explain what “multi-head attention” is. Multi-head attention is just multiple self-attention pipelines running independently, whose results are then simply concatenated together. Because we need to concatenate the results, each head should only produce an embedding of size `n_emb//n_head`. The following diagram demonstrates how two results are concatenated.
 
 ![image.png](/assets/images/llm-from-scratch/image-24.png){: width="500px"}
 
@@ -780,7 +780,7 @@ The trick to quickly understand the manipulation is to look at only one block. F
 
 ![image.png](/assets/images/llm-from-scratch/image-26.png)
 
-Recall that, for any token, we should only look at the token itself and the tokens before it. But the weight right now contains weight we don’t want. For example, the cell pointed by an arrow below tells how much ‘t’ should pay attention to ‘e’, which is after ‘t’. It is easy to see that the top-right half of the matrix contains such unwanted values. We don’t want to include them in the results. 
+Recall that, for any token, we should only look at the token itself and the tokens before it. But the weight matrix right now contains weights we don’t want. For example, the cell pointed to by an arrow below tells how much ‘t’ should pay attention to ‘e’, which is after ‘t’. It is easy to see that the top-right half of the matrix contains such unwanted values. We don’t want to include them in the results. 
 
 ![image.png](/assets/images/llm-from-scratch/image-27.png){: width="500px"}
 
@@ -832,7 +832,7 @@ Let’s assume the weight for the ‘t’ row is as follows. We want to turn the
 
 ![image.png](/assets/images/llm-from-scratch/image-28.png){: width="500px"}
 
-The code use Softmax to turn the numbers into probabilities. 
+The code uses Softmax to turn the numbers into probabilities. 
 
 ```python
 wei = F.softmax(wei, dim=-1) # do softmax at the last dimension.
@@ -894,7 +894,7 @@ print("Softmax probabilities:", probs)
 print("Sum of probabilities:", probs.sum().item())
 ```
 
-Now we come to the last step: getting the weighted Value. Similar to how we get `k` and `q`, we use `self.value` to get the matrix `v`. Recall that `v` is the actual info each token want to expose.
+Now we come to the last step: getting the weighted Value. Similar to how we get `k` and `q`, we use `self.value` to get the matrix `v`. Recall that `v` is the actual info each token wants to expose.
 
 ![image.png](/assets/images/llm-from-scratch/image-30.png)
 
@@ -910,7 +910,7 @@ For example, the highlighted cell in the weighted value is the dot product of th
 
 ### What’s the output of the model?
 
-So far, we have got the weighted value. But that’s not what we want in the end. We want to predict the next token. In other words, we want to know the probabilities of all tokens in the vocabulary for being the next token. For example, given the context ‘accoun’, the probability of ‘t’ being the next may be `0.4` and the probability of ‘&’ may be `0.003`. 
+So far, we have obtained the weighted value. But that’s not what we want in the end. We want to predict the next token. In other words, we want to know the probabilities of all tokens in the vocabulary for being the next token. For example, given the context ‘accoun’, the probability of ‘t’ being the next may be `0.4` and the probability of ‘&’ may be `0.003`. 
 
 ![image.png](/assets/images/llm-from-scratch/image-33.png)
 
@@ -932,7 +932,7 @@ self.lm_head = nn.Linear(n_embd, vocab_size)
 
 ### Calculate the Loss
 
-Now the model outputs the probabilities of the next token, and we know the correct next token, how can we calculate how wrong the outputs are (i.e., the loss)? The loss is the following. 
+The model outputs the probabilities of the next token, and we know the correct next token. How can we calculate how wrong the outputs are (i.e., the loss)? The loss is the following. 
 
 $$
 \text{Loss} = -\log(p_{\text{correct}})
@@ -940,7 +940,7 @@ $$
 
 ![Code_Generated_Image.png](/assets/images/llm-from-scratch/code-generated-image.png){: width="500px"}
 
-Looking at the plot, you can see that, the lower the probability of the correct token is, the more loss it is.
+Looking at the plot, you can see that the lower the probability of the correct token is, the higher the loss.
 
 Let’s take a look at an example to intuitively understand it. Let’s assume that, the model predicts the probabilities of the next tokens for ‘accounte’ are: 
 
@@ -965,7 +965,7 @@ $$
 \text{Loss} = -\log(0.01)= 2
 $$
 
-So, if the prediction is more wrong, the loss will become bigger. The particular loss function above is called cross entropy. 
+So, if the prediction is more wrong, the loss will become bigger. The particular loss function above is called cross-entropy. 
 
 **HandsOn** (`hands_on_009_cross_entropy.py`): Specify target class index to be 2. Observe the results.
 
@@ -1026,10 +1026,10 @@ Now we have the model; how can we use it to generate new text? Well, as we have 
 
 1. give a context (starting with `\n` in the Shakespeare example) to the model
 2. predict the next token
-3. concatenate the context with the predicated token
+3. concatenate the context with the predicted token
 4. repeat until the context length reaches a predefined max.
 
-The following code initialize the context and starts generating.
+The following code initializes the context and starts generating.
 
 ```python
 # [[0]]
@@ -1087,4 +1087,4 @@ Now, you have a complete LLM in `gpt_DIY.py`. Run it by `python gpt_DIY.py` to t
 
 In this article, we covered what it takes to build a real LLM—from basic concepts such as neural networks and tensors to more advanced topics such as self-attention. Hopefully, the hands-on sessions help you better understand how LLMs work, and the visualizations clarify how data flows.
 
-This article should set systems people up for getting deeper into AI, no matter it is AI for systems, or systems for AI.
+This article should set systems people up for getting deeper into AI, whether it is AI for systems or systems for AI.
