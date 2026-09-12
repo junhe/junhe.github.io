@@ -31,7 +31,9 @@ At the end, you will be able to:
 - get hands-on experience with LLMs
 - understand core concepts from embeddings and neural networks to self-attention
 
-We will use a GPT model written by Andrej Karpathy in this article.
+We will use a [GPT model](https://github.com/karpathy/ng-video-lecture) written by Andrej Karpathy in this article.
+
+The code for this article is available at [https://github.com/junhe/llm-from-scratch](https://github.com/junhe/llm-from-scratch). We expect you to clone the repo and follow along with the article.
 
 ## 3. What will our LLM do?
 
@@ -80,7 +82,7 @@ We will use PyTorch to build our Shakespeare LLM. Let’s learn how to use PyTor
 
 Let’s start with tensors and embeddings. A **tensor** is simply multidimensional data: a list is a 1-D tensor, and a matrix is a 2-D tensor. In C++ terms (for systems people):
 
-```python
+```c++
 std::vector<int> is a 1-D tensor.
 
 // Create a 3x3 tensor initialized with 0.0
@@ -105,7 +107,7 @@ Embeddings quantify the features so computers can understand them.
 
 One magic with embeddings is that, by turning the animal features into numbers, computers can now understand/determine how similar two animals are. One way is to use the dot product, which we will use later. Let’s use dot product to answer the question: is dog more similar to cat or lion. 
 
-```python
+```
 Dog           Cat
 [0.7, 0.2] x [0.8, -0.4] = 0.7*0.8 + 0.2*(-0.4) = 0.48
 
@@ -173,7 +175,7 @@ A raw score of `43.5` and `-5` are not very useful predication. We just want a �
 
 **Wait—where do all the weights, bias, and activation come from?** In the example above, we manually picked the numbers; but in reality, we don’t know in the beginning. In the beginning of the neural network, these parameters are just random, much like newborn babies have no clue on how wind and temperatures would affect pickleball playing, and babies don’t know how much they like pickleball (i.e., the bias) either. Humans learn by playing. For example, Bob played 5 games and recorded his experience as follows.
 
-```python
+```
 Temperature (°F)    Wind Speed (mph)    Play
 75.0                3.0                 1.0
 80.0                5.0                 1.0
