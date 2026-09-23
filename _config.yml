@@ -3,6 +3,7 @@ description: >-
 baseurl: ""
 url: "https://junhe.github.io"
 github_username: junhe
+google_analytics: G-08SVRKLKFT
 
 theme: minima
 
