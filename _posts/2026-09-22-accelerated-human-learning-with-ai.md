@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Accelerated Human Learning with AI"
+title: "Accelerated Human Learning with AI, for Engineers"
 ---
 
 At Google, the idea of the Elephant and the Goldfish is popular. It recommends having an agent with a long-term memory of the overall architecture and plan, and many goldfish that start fresh and focus on small-scope tasks. This is not surprising. Human society has been doing this for a long time; for example, shop owners distribute tasks to apprentices, who focus on smaller tasks.
